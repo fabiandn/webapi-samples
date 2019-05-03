@@ -31,5 +31,17 @@ namespace Samples.ReturnTypes.Controllers
         public IActionResult TestPost([FromBody]MyModel model){
             return this.Ok();
         }
+
+        [HttpGet("GetModelsById")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<MyModel> GetModelsById(int id){
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            return new MyModel();
+        }
     }
 }
