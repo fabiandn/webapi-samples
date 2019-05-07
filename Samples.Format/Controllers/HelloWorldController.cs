@@ -1,41 +1,43 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Samples.ReturnTypes.Models;
+using Samples.Format.Models;
 
-namespace Samples.ReturnTypes.Controllers
+namespace Samples.Format.Controllers
 {
+    [Produces("application/xml")]
+    [FormatFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class HelloWorldController : ControllerBase
     {
         [HttpGet]
-        [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
         public IEnumerable<string> Get()
         {
             return new string[]{ "Hello", "World"};
         }
 
+        [HttpGet("Hey")]
+        public string GetHey()
+        {
+            return "Hey";
+        }
+
         [HttpGet("IActionResult")]
-        [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
         public IActionResult GetIActionResult()
         {
             return this.Ok(new string[]{ "Hello", "World"});
         }
 
         [HttpPost("test")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult TestPost([FromBody]MyModel model){
             return this.Ok();
         }
 
         [HttpGet("GetModelsById/{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public ActionResult<MyModel> GetModelsById(int id){
             if (id == 0)
             {
@@ -47,7 +49,12 @@ namespace Samples.ReturnTypes.Controllers
                 return null;
             }
 
-            return new MyModel();
+            return new MyModel{Name= "test", Description= "test" };
+        }
+
+        [Route("GetById/{id}.{format?}")]
+        public MyModel GetById(int id){
+            return new MyModel{Name= "test", Description= "test" };
         }
     }
 }
